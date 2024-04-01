@@ -2,8 +2,126 @@
 
 ### 升级
 * 3.9
+  * 添加 options.preview.math.mathJaxOptions
+  * 添加 hljs.langs
+  * 添加 option.keydown
   * 添加 option.link 和 options.image
   * 添加 hljs.defaultLang
+  * 添加 hljs.renderMenu
+  * 添加 preview.render.media.enable
+
+### TODO
+
+* [open issues](https://github.com/Vanessa219/vditor/issues)
+
+### v3.10.3 / 2024-04
+
+* [⬆️ Bump express from 4.17.3 to 4.19.2](https://github.com/Vanessa219/vditor/pull/1594) `dependencies`
+* [id 不存在时给出对应提示](https://github.com/Vanessa219/vditor/issues/1562) `改进功能`
+* [https 下请求 plantuml 会被阻止](https://github.com/Vanessa219/vditor/pull/1586) `改进功能`
+* [拼写错误](https://github.com/Vanessa219/vditor/issues/1588) `文档相关`
+* [⬆️ Bump webpack-dev-middleware from 5.3.1 to 5.3.4](https://github.com/Vanessa219/vditor/pull/1590) `dependencies`
+* [添加 `preview.render.media.enable` 参数](https://github.com/Vanessa219/vditor/issues/1583) `引入特性`
+
+### v3.10.2 / 2024-03-19
+
+* [使用 object 内嵌 plantuml 以支持特殊语法](https://github.com/Vanessa219/vditor/pull/1579) `改进功能`
+* [⬆️ Bump follow-redirects from 1.15.4 to 1.15.6](https://github.com/Vanessa219/vditor/pull/1582) `dependencies`
+* [改进 bilibili 视频网站解析](https://github.com/Vanessa219/vditor/issues/1581) `改进功能`
+* [改进松散模式下的列表展现](https://github.com/Vanessa219/vditor/issues/1575) `改进功能`
+* [mermaid 图表渲染自适应](https://github.com/Vanessa219/vditor/issues/1574) `改进功能`
+
+### v3.10.1 / 2024-03-05
+
+* [`insertValue` 后无法回车](https://github.com/Vanessa219/vditor/issues/1566) `修复缺陷`
+* [IR 模式滚动时隐藏代码块语言提示](https://github.com/Vanessa219/vditor/issues/1567) `改进功能`
+* [内容为空时回车禁止光标跳动](https://github.com/Vanessa219/vditor/issues/1565) `开发重构`
+* [⬆️ Bump ip from 1.1.5 to 1.1.9](https://github.com/Vanessa219/vditor/pull/1563) `开发重构`
+* [WYSIWYG 模式下链接包含粗体无法打开](https://github.com/Vanessa219/vditor/issues/1560) `改进功能`
+* [添加 options.preview.hljs.renderMenu 方法](https://github.com/Vanessa219/vditor/issues/1553) `引入特性`
+
+### v3.9.9 / 2024-01-30
+
+* [导出 PDF 时主题错误](https://github.com/Vanessa219/vditor/issues/1549) `修复缺陷`
+* [改进表格中行内数学公式 `|` 的渲染](https://github.com/Vanessa219/vditor/issues/1550) `改进功能`
+* [wysiwyg 模式下通过输入框修改元素属性时触发 input](https://github.com/Vanessa219/vditor/issues/1542) `改进功能`
+* [自定义渲染器支持](https://github.com/Vanessa219/vditor/issues/1540) `引入特性`
+
+### v3.9.8 / 2023-12-26
+
+* [多语言加载失败后给出相关提示](https://github.com/Vanessa219/vditor/issues/1531) `改进功能`
+* [导出 PDF 时 CDN 配置不生效](https://github.com/Vanessa219/vditor/pull/1529) `修复缺陷`
+* [sv 模式中在脚注下方输入文本出现渲染错误](https://github.com/Vanessa219/vditor/issues/1518) `修复缺陷`
+* [KaTeX 渲染支持 macros](https://github.com/Vanessa219/vditor/issues/1519) `引入特性`
+* [简化 CDN 配置](https://github.com/Vanessa219/vditor/issues/1522) `改进功能`
+
+### v3.9.7 / 2023-12-14
+
+* [改进带端口的超链接解析](https://github.com/Vanessa219/vditor/issues/1513) `改进功能`
+* [优化代码块复制功能的渲染性能](https://github.com/Vanessa219/vditor/pull/1502) `开发重构`
+* [tipPosition 设置在取消全屏后失效](https://github.com/Vanessa219/vditor/issues/1491) `修复缺陷`
+
+### v3.9.6 / 2023-09-26
+
+* [预览页面渲染错误](https://github.com/Vanessa219/vditor/pull/1475/files) `修复缺陷`
+* [markmap 生产环境路径错误](https://github.com/Vanessa219/vditor/issues/1467) `修复缺陷`
+* [insertValue 后光标移动到插入的字符串之后](https://github.com/Vanessa219/vditor/issues/1464) `改进功能`
+* [preview.actions 为空不渲染工具栏](https://github.com/Vanessa219/vditor/issues/1453) `改进功能`
+* [MathJax 支持传入其他配置项](https://github.com/Vanessa219/vditor/issues/1453) `引入特性`
+
+### v3.9.5 / 2023-08-29
+
+* [换行+冒号会被识别为表格](https://github.com/Vanessa219/vditor/issues/1460) `修复缺陷`
+* [自定义代码块语言](https://github.com/Vanessa219/vditor/issues/1459) `引入特性`
+* [编辑器全票后双击图片无法放大](https://github.com/Vanessa219/vditor/issues/1437) `修复缺陷`
+* [⬆️ Bump word-wrap from 1.2.3 to 1.2.4](https://github.com/Vanessa219/vditor/pull/1436) `dependencies`
+* [IR 模式下输入 `<!--` 后报错](https://github.com/Vanessa219/vditor/issues/1431) `修复缺陷`
+* [改进预览界面复制提示](https://github.com/Vanessa219/vditor/pull/1429) `改进功能`
+
+### v3.9.4 / 2023-06-20
+
+* [支持自动链接配置 `gfmAutoLink`](https://github.com/Vanessa219/vditor/issues/1422) `引入特性`
+* [订正多语言繁体中的文案错误](https://github.com/Vanessa219/vditor/pull/1421) `文档相关`
+* [修正多语言中英语的错误](https://github.com/Vanessa219/vditor/pull/1416) `文档相关`
+* [IR, SV 模式下输入内容后立即点击工具栏下拉无反应](https://github.com/Vanessa219/vditor/issues/1414) `改进功能`
+* [为 `button` 添加 `type` 属性](https://github.com/Vanessa219/vditor/pull/1410) `开发重构`
+* [XSS 代码注入漏洞 - 表单](https://github.com/Vanessa219/vditor/issues/1412) `修复缺陷`
+* [XSS 代码注入漏洞 - meta](https://github.com/Vanessa219/vditor/issues/1411) `修复缺陷`
+
+### v3.9.3 / 2023-05-23
+
+* [XSS 代码注入漏洞 - 链接](https://github.com/Vanessa219/vditor/issues/1401) `修复缺陷`
+* [XSS 代码注入漏洞 - iframe](https://github.com/Vanessa219/vditor/issues/1400) `修复缺陷`
+* [添加`keydown`回调](https://github.com/Vanessa219/vditor/issues/1397) `引入特性`
+* [输入内容后立即点击工具栏下拉无反应](https://github.com/Vanessa219/vditor/issues/1391) `改进功能`
+* [XSS 代码注入漏洞](https://github.com/Vanessa219/vditor/issues/1395) `修复缺陷`
+* [支持葡萄牙语](https://github.com/Vanessa219/vditor/pull/1394) `引入特性`
+
+### v3.9.2 / 2023-04-11
+
+* [代码高亮不指定语言时使用 hljs.defaultLang 进行渲染](https://github.com/Vanessa219/vditor/issues/1382) `引入特性`
+* [选中文本后粘贴网址自动生成链接](https://github.com/Vanessa219/vditor/issues/1301) `改进功能`
+* [情景菜单输入框中 Esc/alt+Enter/Enter 可将光标设置到编辑器中](https://github.com/Vanessa219/vditor/issues/1302) `改进功能`
+* [文本选中弹出组件 speech 位置被多屏影响](https://github.com/Vanessa219/vditor/issues/1373) `改进功能`
+* [更新补充 JSDoc](https://github.com/Vanessa219/vditor/pull/1374) `文档相关`
+
+### v3.9.1 / 2023-03-14
+
+* [新增法语](https://github.com/Vanessa219/vditor/pull/1365) `引入特性`
+* [新增瑞士语](https://github.com/Vanessa219/vditor/pull/1359) `引入特性`
+* [代码块下一行的标题前输入中文时内容会跑到代码块里面](https://github.com/Vanessa219/vditor/issues/1356) `修复缺陷`
+* [连续插入多个列表，控制台报错](https://github.com/Vanessa219/vditor/issues/1343) `修复缺陷`
+* [IR 模式选择内容设置为代码块时异常](https://github.com/Vanessa219/vditor/issues/1354) `修复缺陷`
+
+### v3.9.0 / 2023-01-15
+
+* [1345](https://github.com/Vanessa219/vditor/issues/1345) 移除复制代码块末尾的换行 `改进功能`
+* [1348](https://github.com/Vanessa219/vditor/pull/1348) 新增链接和图片处理接口 `引入特性`
+* [1342](https://github.com/Vanessa219/vditor/pull/1342) 初始化后不自动聚焦 `改进功能`
+* [1341](https://github.com/Vanessa219/vditor/pull/1341) 支持 markmap `引入特性`
+* [1335](https://github.com/Vanessa219/vditor/issues/1335) 嵌入 Iframe 时无法导出 PDF `修复缺陷`
+
+### 历史版本升级记录
 * 3.8
   * 添加 plantumlRender 方法
   * options.input 移除 previewElement 参数
@@ -24,10 +142,10 @@
   * `options.outline` 修改为 `{ enable: boolean, position: "left" | "right" }`
   * `toolbar.click` 参数修改为 `event: Event, vditor: IVditor`
 * 3.6
- * `options.preview.actions` 添加 `tooltip`
- * `mermaidRender` 添加 `theme` 参数
- * `mindmapRender` 添加 `theme` 参数
- * `chartRender` 添加 `theme` 参数
+  * `options.preview.actions` 添加 `tooltip`
+  * `mermaidRender` 添加 `theme` 参数
+  * `mindmapRender` 添加 `theme` 参数
+  * `chartRender` 添加 `theme` 参数
 * 3.5
   * `mermaidRender` 移除 `className` 参数
 * 3.4
@@ -77,19 +195,19 @@
 * v1.9
   * preview 静态方法参数修改为 `(previewElement: HTMLDivElement, markdown: string, options?: IPreviewOptions)`，其中参数 `IPreviewOptions` 修改为
     ```ts
-       anchor?: boolean;
-       className?: string;
-       customEmoji?: { [key: string]: string };
-       lang?: (keyof II18nLang);
-       emojiPath?: string;
-       hljs?: {
-          lineNumber?: boolean;
-          style?: string;
-          enable?: boolean;
-       };
-       speech?: {
-           enable?: boolean
-       }
+        anchor?: boolean;
+        className?: string;
+        customEmoji?: { [key: string]: string };
+        lang?: (keyof II18nLang);
+        emojiPath?: string;
+        hljs?: {
+            lineNumber?: boolean;
+            style?: string;
+            enable?: boolean;
+        };
+        speech?: {
+            enable?: boolean
+        }
     ```
   * highlightRender 参数修改为 `(hljs?: IHljs, element?: HTMLElement | Document)`
 * v1.8
@@ -101,36 +219,6 @@
 * v1.7
   * `option.preivew.show?: boolean` => `option.preivew.mode?: string`
   * 移除 `option.editorName`
-
-### TODO
-
-* [open issues](https://github.com/Vanessa219/vditor/issues)
-
-### v3.9.3 / 2023-05
-
-### v3.9.2 / 2023-04-11
-
-* [代码高亮不指定语言时使用 hljs.defaultLang 进行渲染](https://github.com/Vanessa219/vditor/issues/1382) `引入特性`
-* [选中文本后粘贴网址自动生成链接](https://github.com/Vanessa219/vditor/issues/1301) `改进功能`
-* [情景菜单输入框中 Esc/alt+Enter/Enter 可将光标设置到编辑器中](https://github.com/Vanessa219/vditor/issues/1302) `改进功能`
-* [文本选中弹出组件 speech 位置被多屏影响](https://github.com/Vanessa219/vditor/issues/1373) `改进功能`
-* [更新补充 JSDoc](https://github.com/Vanessa219/vditor/pull/1374) `文档相关`
-
-### v3.9.1 / 2023-03-14
-
-* [新增法语](https://github.com/Vanessa219/vditor/pull/1365) `引入特性`
-* [新增瑞士语](https://github.com/Vanessa219/vditor/pull/1359) `引入特性`
-* [代码块下一行的标题前输入中文时内容会跑到代码块里面](https://github.com/Vanessa219/vditor/issues/1356) `修复缺陷`
-* [连续插入多个列表，控制台报错](https://github.com/Vanessa219/vditor/issues/1343) `修复缺陷`
-* [IR 模式选择内容设置为代码块时异常](https://github.com/Vanessa219/vditor/issues/1354) `修复缺陷`
-
-### v3.9.0 / 2023-01-15
-
-* [1345](https://github.com/Vanessa219/vditor/issues/1345) 移除复制代码块末尾的换行 `改进功能`
-* [1348](https://github.com/Vanessa219/vditor/pull/1348) 新增链接和图片处理接口 `引入特性`
-* [1342](https://github.com/Vanessa219/vditor/pull/1342) 初始化后不自动聚焦 `改进功能`
-* [1341](https://github.com/Vanessa219/vditor/pull/1341) 支持 markmap `引入特性`
-* [1335](https://github.com/Vanessa219/vditor/issues/1335) 嵌入 Iframe 时无法导出 PDF `修复缺陷`
 
 ### v3.8.18 / 2022-11-01
 

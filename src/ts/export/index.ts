@@ -34,8 +34,9 @@ window.addEventListener("message", (e) => {
     return;
   }
   Vditor.preview(document.getElementById('preview'), e.data, {
+    cdn: "${vditor.options.cdn}",
     markdown: {
-      theme: "${vditor.options.preview.theme}"
+      theme: ${JSON.stringify(vditor.options.preview.theme)}
     },
     hljs: {
       style: "${vditor.options.preview.hljs.style}"
@@ -74,7 +75,7 @@ export const exportHTML = (vditor: IVditor) => {
     Vditor.chartRender(previewElement, '${vditor.options.cdn}', '${vditor.options.theme}');
     Vditor.mindmapRender(previewElement, '${vditor.options.cdn}', '${vditor.options.theme}');
     Vditor.abcRender(previewElement, '${vditor.options.cdn}');
-    Vditor.mediaRender(previewElement);
+    ${vditor.options.preview.render.media.enable ? 'Vditor.mediaRender(previewElement);' : ""}
     Vditor.speechRender(previewElement);
 </script>
 <script src="${vditor.options.cdn}/dist/js/icons/${vditor.options.icon}.js"></script></body></html>`;

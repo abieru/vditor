@@ -25,9 +25,7 @@ const mergeOptions = (options?: IPreviewOptions) => {
         anchor: 0,
         cdn: Constants.CDN,
         customEmoji: {},
-        emojiPath: `${
-            (options && options.emojiPath) || Constants.CDN
-        }/dist/images/emoji`,
+        emojiPath: `${Constants.CDN}/dist/images/emoji`,
         hljs: Constants.HLJS_OPTIONS,
         icon: "ant",
         lang: "zh_CN",
@@ -37,8 +35,21 @@ const mergeOptions = (options?: IPreviewOptions) => {
         speech: {
             enable: false,
         },
+        render: {
+            media: {
+                enable: true,
+            }
+        },
         theme: Constants.THEME_OPTIONS,
     };
+    if (options.cdn) {
+        if (!options.theme?.path) {
+            defaultOption.theme.path = `${options.cdn}/dist/css/content-theme`
+        }
+        if (!options.emojiPath) {
+            defaultOption.emojiPath = `${options.cdn}/dist/images/emoji`;
+        }
+    }
     return merge(defaultOption, options);
 };
 
@@ -47,6 +58,7 @@ export const md2html = (mdText: string, options?: IPreviewOptions) => {
     return addScript(`${mergedOptions.cdn}/dist/js/lute/lute.min.js`, "vditorLuteScript").then(() => {
         const lute = setLute({
             autoSpace: mergedOptions.markdown.autoSpace,
+            gfmAutoLink: mergedOptions.markdown.gfmAutoLink,
             codeBlockPreview: mergedOptions.markdown.codeBlockPreview,
             emojiSite: mergedOptions.emojiPath,
             emojis: mergedOptions.customEmoji,
@@ -112,7 +124,7 @@ export const previewRender = async (previewElement: HTMLDivElement, markdown: st
     if (mergedOptions.anchor === 1) {
         previewElement.classList.add("vditor-reset--anchor");
     }
-    codeRender(previewElement);
+    codeRender(previewElement, mergedOptions.hljs);
     highlightRender(mergedOptions.hljs, previewElement, mergedOptions.cdn);
     mathRender(previewElement, {
         cdn: mergedOptions.cdn,
@@ -126,7 +138,9 @@ export const previewRender = async (previewElement: HTMLDivElement, markdown: st
     mindmapRender(previewElement, mergedOptions.cdn, mergedOptions.mode);
     plantumlRender(previewElement, mergedOptions.cdn);
     abcRender(previewElement, mergedOptions.cdn);
-    mediaRender(previewElement);
+    if (mergedOptions.render.media.enable) {
+        mediaRender(previewElement);
+    }
     if (mergedOptions.speech.enable) {
         speechRender(previewElement);
     }

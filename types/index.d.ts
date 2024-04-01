@@ -154,6 +154,8 @@ declare class Lute {
 
     public SetMark(enable: boolean): void;
 
+    public SetGFMAutoLink(enable: boolean): void;
+
     public SetSanitize(enable: boolean): void;
 
     public SetHeadingAnchor(enable: boolean): void;
@@ -431,6 +433,11 @@ interface IHljs {
     style?: string;
     /** 是否启用代码高亮。默认值: true */
     enable?: boolean;
+    /** 自定义指定语言: CODE_LANGUAGES */
+    langs?: string[];
+
+    /** 渲染右上角菜单按钮 */
+    renderMenu?(element: HTMLElement, menuElement: HTMLElement): void;
 }
 
 /** @link https://ld246.com/article/1549638745630#options-preview-math */
@@ -441,6 +448,8 @@ interface IMath {
     macros?: object;
     /** 数学公式渲染引擎。默认值: 'KaTeX' */
     engine?: "KaTeX" | "MathJax";
+    /** 数学公式渲染引擎为 MathJax 时传入的参数 */
+    mathJaxOptions?: any;
 }
 
 /** @link https://ld246.com/article/1549638745630#options-preview-markdown */
@@ -469,6 +478,8 @@ interface IMarkdownConfig {
     listStyle?: boolean;
     /** 支持 mark 标记 */
     mark?: boolean;
+    /** 支持自动链接 */
+    gfmAutoLink?: boolean;
 }
 
 /** @link https://ld246.com/article/1549638745630#options-preview */
@@ -491,12 +502,18 @@ interface IPreview {
     theme?: IPreviewTheme;
     /** @link https://ld246.com/article/1549638745630#options-preview-actions  */
     actions?: Array<IPreviewAction | IPreviewActionCustom>;
-
+    render?: IPreviewRender
     /** 预览回调 */
     parse?(element: HTMLElement): void;
 
     /** 渲染之前回调 */
     transform?(html: string): string;
+}
+
+interface IPreviewRender {
+    media?: {
+        enable?: boolean;
+    }
 }
 
 type IPreviewAction = "desktop" | "tablet" | "mobile" | "mp-wechat" | "zhihu";
@@ -532,6 +549,7 @@ interface IPreviewOptions {
     renderers?: ILuteRender;
     theme?: IPreviewTheme;
     icon?: "ant" | "material" | undefined;
+    render?: IPreviewRender
 
     transform?(html: string): string;
 
@@ -714,6 +732,10 @@ interface IOptions {
     tab?: string;
     /** @link https://ld246.com/article/1549638745630#options-outline */
     outline?: IOutline;
+    customRenders?: {
+        language: string,
+        render: (element: HTMLElement, vditor: IVditor) => void
+    }[],
 
     /** 编辑器异步渲染完成后的回调方法 */
     after?(): void;
@@ -726,6 +748,9 @@ interface IOptions {
 
     /** 失焦后触发 */
     blur?(value: string): void;
+
+    /** 按下键盘触发 */
+    keydown?(event: KeyboardEvent): void;
 
     /** `esc` 按下后触发 */
     esc?(value: string): void;
@@ -763,7 +788,8 @@ interface IVditor {
         element?: HTMLElement,
     };
     preview?: {
-        element: HTMLElement
+        element: HTMLElement,
+        previewElement: HTMLElement,
         render(vditor: IVditor, value?: string): void,
     };
     counter?: {

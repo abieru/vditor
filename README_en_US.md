@@ -52,7 +52,7 @@ Vditor has made efforts in these areas, hoping to make some contributions to the
 
 * Support three editing modes: WYSIWYG(wysiwyg), Instant Rendering(ir) and Split View(sv)
 * Support outline, mathematical formulas, mind maps, charts, flowcharts, Gantt charts, timing charts, staffs, [multimedia](https://ld246.com/article/1589813914768), voice reading, heading anchors, code highlighting and copying, graphviz rendering
-* Built-in security filtering, export, image lazy loading, task list, multi-platform preview, multi-theme switching, copy to WeChat/zhihu function
+* Export, image lazy loading, task list, multi-platform preview, multi-theme switching, copy to WeChat/zhihu function
 * Implementation of CommonMark and GFM specifications, formatting and syntax tree viewing of Markdown, and support for [10+ configurations](https://ld246.com/article/1549638745630#options-preview-markdown)
 * The toolbar contains 36+ items of operations. In addition to support for expansion, the [shortcut keys](https://ld246.com/article/1582778815353), tip, tip positions, icons, click events, class names, and sub-toolbars can be customized
 * Extend auto-complete for emoji/@/# and so on
@@ -181,6 +181,7 @@ Can be filled with element `id` or element itself` HTMLElement`
 | input | Trigger after input (value: string) | - |
 | focus | Trigger after focusing (value: string) | - |
 | blur | Trigger after out of focus (value: string) | - |
+| keydown(event: KeyboardEvent) | Trigger after keydown | - |
 | esc | Trigger after pressing <kbd>esc</kbd> (value: string) | - |
 | ctrlEnter | Trigger after pressing <kbd>⌘/ctrl+enter</kbd> (value: string) | - |
 | select | Triggered after selecting text in the editor (value: string) | - |
@@ -192,6 +193,7 @@ Can be filled with element `id` or element itself` HTMLElement`
 | value | Editor initialization value | '' |
 | theme | Theme: classic, dark | 'classic' |
 | icon | icon theme: ant, material | 'ant' |
+| customRenders: {language: string, render: (element: HTMLElement, vditor: IVditor) => void}[] | Custom render | [] |
 
 #### options.toolbar
 
@@ -290,12 +292,15 @@ new Vditor('vditor', {
 | enable | Whether to enable code syntax highlighting | true |
 | style | For optional values, see [Chroma](https://xyproto.github.io/splash/docs/longer/all.html) | `github` |
 | lineNumber | Whether to enable line number | false |
+| langs | Custom languages | [CODE_LANGUAGES](https://github.com/Vanessa219/vditor/blob/53ca8f9a0e511b37b5dae7c6b15eb933e9e02ccd/src/ts/constants.ts#L20) |
+| renderMenu | render menu button | - |
 
 #### options.preview.markdown
 
 |   | Explanation | Default |
 | - | - | - |
 | autoSpace | Autospace | false |
+| gfmAutoLink | Automatic link | true |
 | fixTermTypo | Automatically correct terminology | false |
 | toc | Insert Table of Contents | false |
 | footnotes | Footnotes | true |
@@ -315,6 +320,7 @@ new Vditor('vditor', {
 | inlineDigit | Whether numbers are allowed after the inline math formula starting with $ | false |
 | macros | Macro definition passed in when rendering with MathJax | {} |
 | engine | Math formula rendering engine: KaTeX, MathJax | 'KaTeX' |
+| mathJaxOptions | Parameters when the math formula rendering engine is MathJax | - |
 
 #### options.preview.actions
 
@@ -327,6 +333,12 @@ Default: ["desktop", "tablet", "mobile", "mp-wechat", "zhihu"]
 | text | Button Text | - |
 | className | Button Class | - |
 | click(key: string) | Click Event | - |
+
+#### options.preview.render.media
+
+|        | Explanation        | Default  |
+|--------|-----------|------|
+| enable | Whether to enable multimedia render | true |
 
 #### options.image
 
@@ -521,6 +533,7 @@ options?: IPreviewOptions {
   cdn?: string; // Self-built CDN address
   lazyLoadImage?: string; // use "https://unpkg.com/vditor/dist/images/img-loading.svg" to lazy load image
   markdown?: options.preview.markdown;
+  render?: options.preview.render;
   renderers?: ILuteRender; // Custom rendering method https://ld246.com/article/1588412297062
 }
 ```
@@ -532,7 +545,7 @@ options?: IPreviewOptions {
 | previewImage(oldImgElement: HTMLImageElement, lang: keyof II18n = "zh_CN", theme = "classic") | Click on the image to preview |
 | mermaidRender(element: HTMLElement, cdn = options.cdn, theme = options.theme) | flowchart/sequence diagram/gantt diagram rendering |
 | flowchartRender(element: HTMLElement, cdn = options.cdn) | flowchart.js rendering |
-| codeRender(element: HTMLElement) | Add a copy button for the code block in element |
+| codeRender(element: HTMLElement, option?: IHljs) | Add a copy button for the code block in element |
 | chartRender(element: (HTMLElement\| Document) = document, cdn = options.cdn, theme = options.theme) | Chart rendering |
 | plantumlRender(element: (HTMLElement\| Document) = document, cdn = options.cdn) | plantuml rendering |
 | abcRender(element: (HTMLElement\| Document) = document, cdn = options.cdn) | Stave rendering |

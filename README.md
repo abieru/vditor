@@ -54,7 +54,7 @@ Vditor 在这些方面做了努力，希望能为现代化的通用 Markdown 编
 
 * 支持三种编辑模式：所见即所得（wysiwyg）、即时渲染（ir）、分屏预览（sv）
 * 支持大纲、数学公式、脑图、图表、流程图、甘特图、时序图、五线谱、[多媒体](https://ld246.com/article/1589813914768)、语音阅读、标题锚点、代码高亮及复制、graphviz 渲染、[plantuml](https://plantuml.com)UML图
-* 内置安全过滤、导出、图片懒加载、任务列表、多平台预览、多主题切换、复制到微信公众号/知乎功能
+* 导出、图片懒加载、任务列表、多平台预览、多主题切换、复制到微信公众号/知乎功能
 * 实现 CommonMark 和 GFM 规范，可对 Markdown 进行格式化和语法树查看，并支持[10+项](https://ld246.com/article/1549638745630#options-preview-markdown)配置
 * 工具栏包含 36+ 项操作，除支持扩展外还可对每一项中的[快捷键](https://ld246.com/article/1582778815353)、提示、提示位置、图标、点击事件、类名、子工具栏进行自定义
 * 表情/at/话题等自动补全扩展
@@ -205,6 +205,7 @@ Markdown 输出的 HTML 所展现的外观。内置 ant-design, light，dark，w
 | input(value: string) | 输入后触发  | - |
 | focus(value: string) | 聚焦后触发 | - |
 | blur(value: string) | 失焦后触发 | - |
+| keydown(event: KeyboardEvent) | 按下后触发 | - |
 | esc(value: string) | <kbd>esc</kbd> 按下后触发 | - |
 | ctrlEnter(value: string) | <kbd>⌘/ctrl+enter</kbd> 按下后触发 | - |
 | select(value: string) | 编辑器中选中文字后触发 | - |
@@ -216,6 +217,7 @@ Markdown 输出的 HTML 所展现的外观。内置 ant-design, light，dark，w
 | value | 编辑器初始化值 | '' |
 | theme | 主题：classic, dark | 'classic' |
 | icon | 图标风格：ant, material | 'ant' |
+| customRenders: {language: string, render: (element: HTMLElement, vditor: IVditor) => void}[] | 自定义渲染器 | [] |
 
 #### options.toolbar
 
@@ -306,12 +308,15 @@ new Vditor('vditor', {
 | enable | 是否启用代码高亮 | true |
 | style | 可选值参见[Chroma](https://xyproto.github.io/splash/docs/longer/all.html) | `github` |
 | lineNumber | 是否启用行号 | false |
+| langs | 自定义指定语言 | [CODE_LANGUAGES](https://github.com/Vanessa219/vditor/blob/53ca8f9a0e511b37b5dae7c6b15eb933e9e02ccd/src/ts/constants.ts#L20) |
+| renderMenu | 渲染菜单按钮 | - |
 
 #### options.preview.markdown
 
 |   | 说明 | 默认值 |
 | - | - | - |
 | autoSpace | 自动空格 | false |
+| gfmAutoLink | 自动链接 | true |
 | fixTermTypo | 自动矫正术语 | false |
 | toc | 插入目录 | false |
 | footnotes | 脚注 | true |
@@ -339,6 +344,7 @@ new Vditor('vditor', {
 | inlineDigit | 内联数学公式起始 $ 后是否允许数字 | false |
 | macros | 使用 MathJax 渲染时传入的宏定义 | {} |
 | engine | 数学公式渲染引擎：KaTeX, MathJax | 'KaTeX' |
+| mathJaxOptions | 数学公式渲染引擎为 MathJax 时的参数 | - |
 
 #### options.preview.actions?: Array<IPreviewAction | IPreviewActionCustom>
 
@@ -352,6 +358,12 @@ new Vditor('vditor', {
 | tooltip | 提示 | - |
 | className | 按钮类名 | - |
 | click(key: string) | 按钮点击回调事件 | - |
+
+#### options.preview.render.media
+
+|        | 说明        | 默认值  |
+|--------|-----------|------|
+| enable | 是否启用多媒体渲染 | true |
 
 #### options.image
 
@@ -569,6 +581,7 @@ options?: IPreviewOptions {
   lazyLoadImage?: string; // 设置为 Loading 图片地址后将启用图片的懒加载
   markdown?: options.preview.markdown;
   theme?: options.preview.theme;
+  render?: options.preview.render;
   renderers?: ILuteRender; // 自定义渲染 https://ld246.com/article/1588412297062
 }
 ```
@@ -580,7 +593,7 @@ options?: IPreviewOptions {
 | previewImage(oldImgElement: HTMLImageElement, lang: keyof II18n = "zh_CN", theme = "classic") | 点击图片预览 |
 | mermaidRender(element: HTMLElement, cdn = options.cdn, theme = options.theme) | 流程图/时序图/甘特图 |
 | flowchartRender(element: HTMLElement, cdn = options.cdn) | flowchart 渲染 |
-| codeRender(element: HTMLElement) | 为 element 中的代码块添加复制按钮 |
+| codeRender(element: HTMLElement, option?: IHljs) | 为 element 中的代码块添加复制按钮 |
 | chartRender(element: (HTMLElement \| Document) = document, cdn = options.cdn, theme = options.theme) | 图表渲染 |
 | mindmapRender(element: (HTMLElement \| Document) = document, cdn = options.cdn, theme = options.theme) | 脑图渲染 |
 | plantumlRender(element: (HTMLElement \| Document) = document, cdn = options.cdn) | plantuml 渲染 |

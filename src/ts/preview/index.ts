@@ -19,18 +19,19 @@ import {previewImage} from "./image";
 
 export class Preview {
     public element: HTMLElement;
+    public previewElement: HTMLElement;
     private mdTimeoutId: number;
 
     constructor(vditor: IVditor) {
         this.element = document.createElement("div");
         this.element.className = `vditor-preview`;
-        const previewElement = document.createElement("div");
-        previewElement.className = "vditor-reset";
+        this.previewElement = document.createElement("div");
+        this.previewElement.className = "vditor-reset";
         if (vditor.options.classes.preview) {
-            previewElement.classList.add(vditor.options.classes.preview);
+            this.previewElement.classList.add(vditor.options.classes.preview);
         }
-        previewElement.style.maxWidth = vditor.options.preview.maxWidth + "px";
-        previewElement.addEventListener("copy", (event: ClipboardEvent & { target: HTMLElement }) => {
+        this.previewElement.style.maxWidth = vditor.options.preview.maxWidth + "px";
+        this.previewElement.addEventListener("copy", (event: ClipboardEvent & { target: HTMLElement }) => {
             if (event.target.tagName === "TEXTAREA") {
                 // https://github.com/Vanessa219/vditor/issues/901
                 return;
@@ -39,14 +40,14 @@ export class Preview {
             tempElement.className = "vditor-reset";
             tempElement.appendChild(getSelection().getRangeAt(0).cloneContents());
 
-            this.copyToX(vditor, tempElement);
+            this.copyToX(vditor, tempElement, "default");
             event.preventDefault();
         });
-        previewElement.addEventListener("click", (event: MouseEvent & { target: HTMLElement }) => {
+        this.previewElement.addEventListener("click", (event: MouseEvent & { target: HTMLElement }) => {
             const spanElement = hasClosestByMatchTag(event.target, "SPAN");
             if (spanElement && hasClosestByClassName(spanElement, "vditor-toc")) {
                 const headingElement =
-                    previewElement.querySelector("#" + spanElement.getAttribute("data-target-id")) as HTMLElement;
+                    this.previewElement.querySelector("#" + spanElement.getAttribute("data-target-id")) as HTMLElement;
                 if (headingElement) {
                     this.element.scrollTop = headingElement.offsetTop;
                 }
@@ -69,8 +70,11 @@ export class Preview {
                 }
             }
         });
-
+        this.element.appendChild(this.previewElement);
         const actions = vditor.options.preview.actions;
+        if (actions.length === 0) {
+            return;
+        }
         const actionElement = document.createElement("div");
         actionElement.className = "vditor-preview__action";
         const actionHtml: string[] = [];
@@ -99,12 +103,6 @@ export class Preview {
             }
         }
         actionElement.innerHTML = actionHtml.join("");
-        if (actions.length === 0) {
-            actionElement.style.display = "none";
-        }
-        this.element.appendChild(actionElement);
-        this.element.appendChild(previewElement);
-
         actionElement.addEventListener(getEventName(), (event) => {
             const btn = hasClosestByTag(event.target as HTMLElement, "BUTTON");
             if (!btn) {
@@ -118,19 +116,19 @@ export class Preview {
             }
 
             if (type === "mp-wechat" || type === "zhihu") {
-                this.copyToX(vditor, this.element.lastElementChild.cloneNode(true) as HTMLElement, type);
+                this.copyToX(vditor, this.previewElement.cloneNode(true) as HTMLElement, type);
                 return;
             }
 
             if (type === "desktop") {
-                previewElement.style.width = "auto";
+                this.previewElement.style.width = "auto";
             } else if (type === "tablet") {
-                previewElement.style.width = "780px";
+                this.previewElement.style.width = "780px";
             } else {
-                previewElement.style.width = "360px";
+                this.previewElement.style.width = "360px";
             }
-            if (previewElement.scrollWidth > previewElement.parentElement.clientWidth) {
-                previewElement.style.width = "auto";
+            if (this.previewElement.scrollWidth > this.previewElement.parentElement.clientWidth) {
+                this.previewElement.style.width = "auto";
             }
             this.render(vditor);
             actionElement.querySelectorAll("button").forEach((item) => {
@@ -138,6 +136,7 @@ export class Preview {
             });
             btn.classList.add("vditor-preview__action--current");
         });
+        this.element.insertBefore(actionElement, this.previewElement);
     }
 
     public render(vditor: IVditor, value?: string) {
@@ -151,13 +150,13 @@ export class Preview {
         }
 
         if (value) {
-            this.element.lastElementChild.innerHTML = value;
+            this.previewElement.innerHTML = value;
             return;
         }
 
         if (getMarkdown(vditor)
             .replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "") === "") {
-            this.element.lastElementChild.innerHTML = "";
+            this.previewElement.innerHTML = "";
             return;
         }
 
@@ -179,14 +178,14 @@ export class Preview {
                             if (vditor.options.preview.transform) {
                                 responseJSON.data = vditor.options.preview.transform(responseJSON.data);
                             }
-                            this.element.lastElementChild.innerHTML = responseJSON.data;
+                            this.previewElement.innerHTML = responseJSON.data;
                             this.afterRender(vditor, renderStartTime);
                         } else {
                             let html = vditor.lute.Md2HTML(markdownText);
                             if (vditor.options.preview.transform) {
                                 html = vditor.options.preview.transform(html);
                             }
-                            this.element.lastElementChild.innerHTML = html;
+                            this.previewElement.innerHTML = html;
                             this.afterRender(vditor, renderStartTime);
                         }
                     }
@@ -198,7 +197,7 @@ export class Preview {
                 if (vditor.options.preview.transform) {
                     html = vditor.options.preview.transform(html);
                 }
-                this.element.lastElementChild.innerHTML = html;
+                this.previewElement.innerHTML = html;
                 this.afterRender(vditor, renderStartTime);
             }
         }, vditor.options.preview.delay);
@@ -221,18 +220,23 @@ export class Preview {
         if (cmtFocusElement) {
             cmtFocusElement.classList.remove("vditor-comment--focus");
         }
-        codeRender(vditor.preview.element.lastElementChild as HTMLElement);
-        highlightRender(vditor.options.preview.hljs, vditor.preview.element.lastElementChild as HTMLElement,
+        codeRender(vditor.preview.previewElement, vditor.options.preview.hljs);
+        highlightRender(vditor.options.preview.hljs, vditor.preview.previewElement,
             vditor.options.cdn);
-        mermaidRender(vditor.preview.element.lastElementChild as HTMLElement, vditor.options.cdn, vditor.options.theme);
-        markmapRender(vditor.preview.element.lastElementChild as HTMLElement, vditor.options.cdn, vditor.options.theme);
-        flowchartRender(vditor.preview.element.lastElementChild as HTMLElement, vditor.options.cdn);
-        graphvizRender(vditor.preview.element.lastElementChild as HTMLElement, vditor.options.cdn);
-        chartRender(vditor.preview.element.lastElementChild as HTMLElement, vditor.options.cdn, vditor.options.theme);
-        mindmapRender(vditor.preview.element.lastElementChild as HTMLElement, vditor.options.cdn, vditor.options.theme);
-        plantumlRender(vditor.preview.element.lastElementChild as HTMLElement, vditor.options.cdn);
-        abcRender(vditor.preview.element.lastElementChild as HTMLElement, vditor.options.cdn);
-        mediaRender(vditor.preview.element.lastElementChild as HTMLElement);
+        mermaidRender(vditor.preview.previewElement, vditor.options.cdn, vditor.options.theme);
+        markmapRender(vditor.preview.previewElement, vditor.options.cdn, vditor.options.theme);
+        flowchartRender(vditor.preview.previewElement, vditor.options.cdn);
+        graphvizRender(vditor.preview.previewElement, vditor.options.cdn);
+        chartRender(vditor.preview.previewElement, vditor.options.cdn, vditor.options.theme);
+        mindmapRender(vditor.preview.previewElement, vditor.options.cdn, vditor.options.theme);
+        plantumlRender(vditor.preview.previewElement, vditor.options.cdn);
+        abcRender(vditor.preview.previewElement, vditor.options.cdn);
+        if (vditor.options.preview.render.media.enable) {
+            mediaRender(vditor.preview.previewElement);
+        }
+        vditor.options.customRenders.forEach((item) => {
+            item.render(vditor.preview.previewElement, vditor);
+        })
         // toc render
         const editorElement = vditor.preview.element;
         let tocHTML = vditor.outline.render(vditor);
@@ -246,7 +250,7 @@ export class Preview {
                 math: vditor.options.preview.math,
             });
         });
-        mathRender(vditor.preview.element.lastElementChild as HTMLElement, {
+        mathRender(vditor.preview.previewElement, {
             cdn: vditor.options.cdn,
             math: vditor.options.preview.math,
         });
@@ -274,7 +278,8 @@ export class Preview {
         range.selectNode(copyElement);
         setSelectionFocus(range);
         document.execCommand("copy");
-        this.element.lastElementChild.remove();
-        vditor.tip.show(`已复制，可到${type === "zhihu" ? "知乎" : "微信公众号平台"}进行粘贴`);
+        copyElement.remove();
+
+        vditor.tip.show(['zhihu', 'mp-wechat'].includes(type) ? `已复制，可到${type === "zhihu" ? "知乎" : "微信公众号平台"}进行粘贴` : `已复制到剪切板`);
     }
 }

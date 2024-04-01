@@ -1,33 +1,33 @@
 import {code160to32} from "../util/code160to32";
 import {Constants} from "../constants";
 
-export const codeRender = (element: HTMLElement) => {
-    element.querySelectorAll("pre > code").forEach((e: HTMLElement, index: number) => {
+export const codeRender = (element: HTMLElement, option?: IHljs) => {
+    Array.from<HTMLElement>(element.querySelectorAll("pre > code")).filter((e, index) => {
         if (e.parentElement.classList.contains("vditor-wysiwyg__pre") ||
             e.parentElement.classList.contains("vditor-ir__marker--pre")) {
-            return;
+            return false;
         }
         if (e.classList.contains("language-mermaid") || e.classList.contains("language-flowchart") ||
             e.classList.contains("language-echarts") || e.classList.contains("language-mindmap") ||
             e.classList.contains("language-plantuml") || e.classList.contains("language-markmap") ||
             e.classList.contains("language-abc") || e.classList.contains("language-graphviz") ||
             e.classList.contains("language-math")) {
-            return;
+            return false;
         }
 
         if (e.style.maxHeight.indexOf("px") > -1) {
-            return;
+            return false;
         }
 
         // 避免预览区在渲染后由于代码块过多产生性能问题 https://github.com/b3log/vditor/issues/67
         if (element.classList.contains("vditor-preview") && index > 5) {
-            return;
+            return false;
         }
-
+        return true;
+    }).forEach((e) => {
         let codeText = e.innerText;
         if (e.classList.contains("highlight-chroma")) {
-            const codeElement = document.createElement("code");
-            codeElement.innerHTML = e.innerHTML;
+            const codeElement = e.cloneNode(true) as HTMLElement;
             codeElement.querySelectorAll(".highlight-ln").forEach((item: HTMLElement) => {
                 item.remove();
             });
@@ -49,7 +49,9 @@ onclick="this.previousElementSibling.select();document.execCommand('copy');this.
         const textarea = document.createElement("textarea");
         textarea.value = code160to32(codeText);
         divElement.insertAdjacentElement("afterbegin", textarea);
-
+        if (option && option.renderMenu) {
+            option.renderMenu(e, divElement);
+        }
         e.before(divElement);
         e.style.maxHeight = (window.outerHeight - 40) + "px";
         // https://github.com/Vanessa219/vditor/issues/1356
